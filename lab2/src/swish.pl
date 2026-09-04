@@ -57,21 +57,25 @@ es_madre_de(M ,H):-
 
 es_hermano_de(H, X):-
     hombre(H),
+    H \= X,
     es_padre_de(P, H),
     es_padre_de(P, X).
 
 es_hermano_de(H, X):-
     hombre(H),
+    H \= X,
     es_madre_de(M, H),
     es_madre_de(M, X).
 
 es_hermana_de(H, X):-
     mujer(H),
+    H \= X,
     es_padre_de(P, H),
     es_padre_de(P, X).
 
 es_hermana_de(H, X):-
     mujer(H),
+    H \= X,
     es_madre_de(M, H),
     es_madre_de(M, X).
 
