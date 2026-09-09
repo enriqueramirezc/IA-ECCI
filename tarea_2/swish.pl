@@ -1,39 +1,39 @@
-condition(1).
-condition(2).
-condition(3).
-condition(4).
-condition(5).
-condition(6).
-condition(7).
-condition(8).
-condition(9).
-condition(10).
-condition(11).
-condition(12).
-condition(13).
-condition(14).
-condition(15).
-condition(16).
-condition(17).
-condition(18).
-condition(19).
-condition(20).
-condition(21).
-condition(22).
-condition(23).
-condition(24).
-condition(25).
-condition(26).
-condition(27).
-condition(28).
-condition(29).
-condition(30).
-condition(31).
-condition(32).
-condition(33).
-condition(34).
-condition(35).
-condition(36).
+padecimiento(1).
+padecimiento(2).
+padecimiento(3).
+padecimiento(4).
+padecimiento(5).
+padecimiento(6).
+padecimiento(7).
+padecimiento(8).
+padecimiento(9).
+padecimiento(10).
+padecimiento(11).
+padecimiento(12).
+padecimiento(13).
+padecimiento(14).
+padecimiento(15).
+padecimiento(16).
+padecimiento(17).
+padecimiento(18).
+padecimiento(19).
+padecimiento(20).
+padecimiento(21).
+padecimiento(22).
+padecimiento(23).
+padecimiento(24).
+padecimiento(25).
+padecimiento(26).
+padecimiento(27).
+padecimiento(28).
+padecimiento(29).
+padecimiento(30).
+padecimiento(31).
+padecimiento(32).
+padecimiento(33).
+padecimiento(34).
+padecimiento(35).
+padecimiento(36).
 
 medicamento(paracetamol).
 medicamento(ibuprofeno).
@@ -306,4 +306,8 @@ contraindicacion(dexketoprofeno, 34).
 % \+ sirve para verificar que no existen contraindicaciones en comun
 puede_combinar(A, B) :-
     A \= B,
-    \+ ( contraindicacion(A, X), contraindicacion(B, X) ).
+    \+ (contraindicacion(A, X), contraindicacion(B, X)).
+
+% verificar que No haya contraindicacion
+puede_usar(M, C) :-
+    \+ contraindicacion(M, C).
