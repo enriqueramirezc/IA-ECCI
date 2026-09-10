@@ -35,6 +35,75 @@ padecimiento(34).
 padecimiento(35).
 padecimiento(36).
 
+
+sintoma(dolor_leve_moderado).
+sintoma(fiebre).
+sintoma(dolor).
+sintoma(inflamacion).
+sintoma(acidez).
+sintoma(reflujo_gastrico).
+sintoma(gastritis).
+sintoma(infecciones_bacterianas).
+sintoma(hipertension_arterial).
+sintoma(nivel_alto_azucar).
+sintoma(broncoespasmo).
+sintoma(sibilancias).
+sintoma(falta_aire).
+sintoma(alergias).
+sintoma(rinitis).
+sintoma(picazon).
+sintoma(urticaria).
+sintoma(colesterol_elevado).
+sintoma(hipotiroidismo).
+sintoma(fatiga).
+sintoma(peso).
+sintoma(hipertension).
+sintoma(insuficiencia_cardiaca).
+sintoma(ansiedad_severa).
+sintoma(panico).
+sintoma(convulsiones).
+sintoma(depresion).
+sintoma(ansiedad).
+sintoma(toc).
+sintoma(infecciones_bacterianas_complejas).
+sintoma(dolor_articular).
+sintoma(dolor_muscular).
+sintoma(dolor_leve).
+sintoma(riesgo_trombos).
+sintoma(dolor_agudo_moderado).
+sintoma(dolor_severo).
+sintoma(angina_pecho).
+sintoma(arritmias).
+sintoma(angina).
+sintoma(nauseas).
+sintoma(vomitos).
+sintoma(vaciado_gastrico_lento).
+sintoma(retencion_liquidos).
+sintoma(dolor_moderado).
+sintoma(inflamacion_severa).
+sintoma(reacciones_autoinmunes).
+sintoma(crisis_ansiedad).
+sintoma(edema).
+sintoma(azucar_alta).
+sintoma(infecciones_respiratorias).
+sintoma(infecciones_piel).
+sintoma(sintomas_alergicos).
+sintoma(estornudos).
+sintoma(congestion).
+sintoma(colicos_abdominales).
+sintoma(espasmos_digestivos).
+sintoma(dificultad_orinar).
+sintoma(prevencion_asma).
+sintoma(rinitis_alergica).
+sintoma(colesterol_alto).
+sintoma(trigliceridos).
+sintoma(infecciones_hongos).
+sintoma(disfuncion_erectil).
+sintoma(hipertension_pulmonar).
+sintoma(dolor_agudo_dental).
+sintoma(dolor_agudo_muscular).
+sintoma(dolor_agudo_menstrual).
+
 medicamento(paracetamol).
 medicamento(ibuprofeno).
 medicamento(omeprazol).
@@ -304,6 +373,7 @@ contraindicacion(dexketoprofeno, 15).
 contraindicacion(dexketoprofeno, 34).
 
 % \+ sirve para verificar que no existen contraindicaciones en comun
+% Esto me parece absurdo sinceramente, pero bueno, yo sigo el enunciado
 puede_combinar(A, B) :-
     A \= B,
     \+ (contraindicacion(A, X), contraindicacion(B, X)).
@@ -311,3 +381,50 @@ puede_combinar(A, B) :-
 % verificar que No haya contraindicacion
 puede_usar(M, C) :-
     \+ contraindicacion(M, C).
+
+% preguntar padecimientos
+% preguntar medicamentos que consume
+% preguntar sintomas 
+ingresar_sintoma(X) :-
+  write('Ingrese síntoma:'),
+  nl,
+  read(X),
+  sintoma(X).
+
+:- dynamic tiene/1.  % padecimientos en numero
+:- dynamic consume/1.   % medicamentos que usa
+
+preguntar_padecimientos :-
+    write('Ingrese num de padecimiento o fin: '), nl,
+    read(X),
+    ( X == fin -> true
+    ; padecimiento(X) -> assertz(tiene(X)), preguntar_padecimientos
+    ; write('Padecimiento no valido'), nl, preguntar_padecimientos
+    ).
+
+preguntar_medicamentos :-
+    write('Ingrese medicamento que usa o fin: '), nl,
+    read(X),
+    ( X == fin -> true
+    ; medicamento(X) -> assertz(consume(X)), preguntar_medicamentos
+    ; write('Medicamento no valido'), nl, preguntar_medicamentos
+    ).
+
+% recetar si ataca  sintoma, no hay contrainidicacion con padecimientos existentes y se puede combinar
+% y se puede combinar con lo que ya usa.
+puede_recetar(Sintoma, M) :-
+    ataca(M, Sintoma),
+    \+ (tiene(P), contraindicacion(M, P)),
+    \+ (consume(C), \+ puede_combinar(M, C)).
+
+% recibir entrada de usuario
+% estos retract son para que se limpie la entrada en cada usow
+consulta :-
+    retractall(tiene(_)),
+    retractall(consume(_)),
+    ingresar_sintoma(S),
+    preguntar_padecimientos,
+    preguntar_medicamentos,
+    findall(M, puede_recetar(S, M), Ms),
+    write('Medicamentos recomendados: '), write(Ms), nl.
+
